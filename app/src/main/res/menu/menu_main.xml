@@ -40,8 +40,6 @@
                     android:id="@+id/action_8"
                     android:title=""
                     app:showAsAction="ifRoom"></item>
-
-
             </group>
         </menu>
     </item>
