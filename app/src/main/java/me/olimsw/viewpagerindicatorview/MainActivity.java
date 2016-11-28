@@ -19,6 +19,7 @@ import java.util.List;
 import me.olimsw.viewpagerindicatorviewlibrary.ViewPagerIndicatorView;
 
 import static me.olimsw.viewpagerindicatorviewlibrary.AnimationMode.COMPRESSSLIDE;
+import static me.olimsw.viewpagerindicatorviewlibrary.AnimationMode.DRAG;
 import static me.olimsw.viewpagerindicatorviewlibrary.AnimationMode.GRADIENTCOLOR;
 import static me.olimsw.viewpagerindicatorviewlibrary.AnimationMode.RECTSLIDE;
 import static me.olimsw.viewpagerindicatorviewlibrary.AnimationMode.SLIDE;
@@ -104,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
                         vpiv.setUnselectedColor(Color.WHITE);
                         break;
                     case R.id.action_8:
-                        toolbar.setSubtitle("");
+                        vpiv.setAnimationMode(DRAG);
+                        vpiv.setUnselectedColor(Color.WHITE);
+                        toolbar.setSubtitle("DRAG");
                         break;
                 }
 

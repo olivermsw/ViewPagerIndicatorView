@@ -38,7 +38,7 @@
                     app:showAsAction="ifRoom"></item>
                 <item
                     android:id="@+id/action_8"
-                    android:title=""
+                    android:title="DRAG"
                     app:showAsAction="ifRoom"></item>
             </group>
         </menu>

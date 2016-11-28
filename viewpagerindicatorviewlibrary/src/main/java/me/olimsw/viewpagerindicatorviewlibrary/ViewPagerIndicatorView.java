@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -142,10 +143,37 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
             case ZOOM:
                 onDrawZoomView(canvas);
                 break;
+            case DRAG:
+                onDrawDragView(canvas);
+                break;
             default:
                 onDrawStandardView(canvas);
                 break;
         }
+    }
+
+    /**
+     * DRAG模式动画绘制,拖拽
+     *
+     * @param canvas 画布{@link Canvas}
+     */
+    private void onDrawDragView(Canvas canvas) {
+
+        int y = getHeight() / 2;
+        unselectedPaint.setAlpha(translucenceInt);
+        for (int i = 0; i < count; i++) {
+            int x = getCenterOfCircleX(i);
+            canvas.drawCircle(x, y, radius, unselectedPaint);
+        }
+        Path path = new Path();
+        path.moveTo(radius, 0);
+        path.cubicTo(radius, 0, 2 * radius + padding / 2, getHeight(), 3 * radius + padding, 0);
+        path.lineTo(3 * radius + padding, getHeight());
+        path.cubicTo(3 * radius + padding, getHeight(), 2 * radius + padding / 2, 0, radius, getHeight());
+        path.lineTo(radius, 0);
+//        unselectedPaint.setStyle(Paint.Style.STROKE);
+//        unselectedPaint.setStrokeWidth(3);
+        canvas.drawPath(path, unselectedPaint);
     }
 
     /**
