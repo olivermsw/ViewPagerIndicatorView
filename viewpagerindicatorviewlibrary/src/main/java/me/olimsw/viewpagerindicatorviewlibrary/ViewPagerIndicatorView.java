@@ -149,18 +149,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
      * @param canvas 画布{@link Canvas}
      */
     private void onDrawSmallRectSlideView(Canvas canvas) {
-        int y = getHeight() / 2;
-        for (int i = 0; i < count; i++) {
-            int x = getCenterOfCircleX(i);
-            canvas.drawCircle(x, y, radius, unselectedPaint);
-        }
-        int h;
-        if (isSlideToRightSide) {
-            h = (int) ((255 - translucenceInt) * selectingProgress);
-        } else {
-            h = (int) ((255 - translucenceInt) * (1 - selectingProgress));
-        }
-
+        // TODO: 2016/11/28
     }
 
     /**
@@ -177,6 +166,17 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
         int h = y * 2;
         float relationX = getCenterOfCircleX(relationPosition) + selectingProgress * (radius * 2 + padding);
         int selectedCenterOfCircleX = getCenterOfCircleX(selectedPosition);
+        if (isSlideToRightSide) {
+            if (selectingProgress > 0.8f) {
+                int offset = (int) ((1 - (1 - selectingProgress) / 0.2f) * (h + padding));
+                selectedCenterOfCircleX += offset;
+            }
+        } else {
+            if (selectingProgress < 0.2f) {
+                int offset = (int) ((1 - selectingProgress / 0.2f) * (h + padding));
+                selectedCenterOfCircleX -= offset;
+            }
+        }
         if (selectingProgress != 0) {
             canvas.drawCircle(relationX, y, radius, selectedPaint);
             canvas.drawCircle(selectedCenterOfCircleX, y, radius, selectedPaint);
@@ -228,12 +228,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
      * @param canvas 画布{@link Canvas}
      */
     private void onDrawCompressSlideView(Canvas canvas) {
-        int y = getHeight() / 2;
-        for (int i = 0; i < count; i++) {
-            int x = getCenterOfCircleX(i);
-            canvas.drawCircle(x, y, radius, unselectedPaint);
-        }
-        canvas.drawCircle(getCenterOfCircleX(relationPosition) + selectingProgress * (radius * 2 + padding), y, radius, selectedPaint);
+        // TODO: 2016/11/28
     }
 
     /**
