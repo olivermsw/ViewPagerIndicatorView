@@ -30,7 +30,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
     private Paint selectedPaint = new Paint();
     private float selectingProgress;
     private boolean isSlideToRightSide;
-    private AnimationType animationType;
+    private AnimationMode animationMode;
     private int translucenceInt = 127;
 
     public ViewPagerIndicatorView(Context context) {
@@ -71,7 +71,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
         selectedPaint.setAntiAlias(true);
         selectedPaint.setStyle(Paint.Style.FILL);
         selectedPaint.setStrokeWidth(0);
-        animationType = AnimationType.SLIDE;
+        animationMode = AnimationMode.SLIDE;
         defaultWidth = dp2px(2);
     }
 
@@ -120,7 +120,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        switch (animationType) {
+        switch (animationMode) {
             case STANDARD:
                 onDrawStandardView(canvas);
                 break;
@@ -441,11 +441,11 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
     /**
      * 设置动画效果
      *
-     * @param animationType 动画效果美枚举{@link AnimationType}
+     * @param animationMode 动画效果美枚举{@link AnimationMode}
      */
-    public void setAnimationType(AnimationType animationType) {
-        this.animationType = animationType;
-        switch (animationType) {
+    public void setAnimationMode(AnimationMode animationMode) {
+        this.animationMode = animationMode;
+        switch (animationMode) {
             case COMPRESSSLIDE:
                 unselectedPaint.setStyle(Paint.Style.STROKE);
                 break;
@@ -464,7 +464,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
     @Override
     public void onPageSelected(int position) {
         pageSelectedPosition = position;
-        if (animationType == AnimationType.STANDARD) {
+        if (animationMode == AnimationMode.STANDARD) {
             selectedPosition = position;
         }
     }
@@ -473,7 +473,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
     public void onPageScrollStateChanged(int state) {
         if (state == ViewPager.SCROLL_STATE_IDLE) {
             selectedPosition = pageSelectedPosition;
-            if (animationType == AnimationType.STANDARD) {
+            if (animationMode == AnimationMode.STANDARD) {
                 invalidate();
             }
         }
