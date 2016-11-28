@@ -149,7 +149,44 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
      * @param canvas 画布{@link Canvas}
      */
     private void onDrawSmallRectSlideView(Canvas canvas) {
-        // TODO: 2016/11/28
+        int radius = this.radius * 2 / 3;
+        int offestRadius = this.radius / 3;
+        int y = getHeight() / 2;
+        for (int i = 0; i < count; i++) {
+            int x = getCenterOfCircleX(i);
+            canvas.drawCircle(x, y, this.radius, unselectedPaint);
+        }
+        int h = y * 2;
+        int selectedCenterOfCircleX = getCenterOfCircleX(selectedPosition);
+        if (isSlideToRightSide) {
+            if (selectingProgress > 0.8f) {
+                int offset = (int) ((1 - (1 - selectingProgress) / 0.2f) * (h + padding));
+                selectedCenterOfCircleX += offset;
+                radius = (int) (radius + offestRadius * (1 - (1 - selectingProgress) / 0.2f));
+            } else if (selectingProgress < 0.2) {
+                radius = (int) (radius + offestRadius * (1 - selectingProgress / 0.2f));
+            }
+        } else {
+            if (selectingProgress < 0.2f) {
+                int offset = (int) ((1 - selectingProgress / 0.2f) * (h + padding));
+                selectedCenterOfCircleX -= offset;
+                radius = (int) (radius + offestRadius * (1 - selectingProgress / 0.2f));
+            } else if (selectingProgress > 0.8f) {
+                radius = (int) (radius + offestRadius * (1 - (1 - selectingProgress) / 0.2f));
+            }
+        }
+        float relationX = getCenterOfCircleX(relationPosition) + selectingProgress * (radius * 2 + padding);
+        if (selectingProgress != 0) {
+            canvas.drawCircle(relationX, y, radius, selectedPaint);
+            canvas.drawCircle(selectedCenterOfCircleX, y, radius, selectedPaint);
+            if (isSlideToRightSide) {
+                canvas.drawRect(selectedCenterOfCircleX, this.radius - radius, relationX, h - (this.radius - radius), selectedPaint);
+            } else {
+                canvas.drawRect(relationX, this.radius - radius, selectedCenterOfCircleX, h - (this.radius - radius), selectedPaint);
+            }
+        } else {
+            canvas.drawCircle(relationX, y, radius, selectedPaint);
+        }
     }
 
     /**
@@ -180,7 +217,11 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
         if (selectingProgress != 0) {
             canvas.drawCircle(relationX, y, radius, selectedPaint);
             canvas.drawCircle(selectedCenterOfCircleX, y, radius, selectedPaint);
-            canvas.drawRect(selectedCenterOfCircleX, h, relationX, 0, selectedPaint);
+            if (isSlideToRightSide) {
+                canvas.drawRect(selectedCenterOfCircleX, 0, relationX, h, selectedPaint);
+            } else {
+                canvas.drawRect(relationX, 0, selectedCenterOfCircleX, h, selectedPaint);
+            }
         } else {
             canvas.drawCircle(relationX, y, radius, selectedPaint);
         }
@@ -228,7 +269,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
      * @param canvas 画布{@link Canvas}
      */
     private void onDrawCompressSlideView(Canvas canvas) {
-        // TODO: 2016/11/28
+
     }
 
     /**
@@ -266,16 +307,13 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
     /**
      * 计算当前位置信息
      *
-     * @param position
-     * @param positionOffset
+     * @param position       位置
+     * @param positionOffset 偏移量（0~1f）
      */
     private void onProgress(int position, float positionOffset) {
         relationPosition = position;
         boolean isRightOverScrolled = position > selectedPosition;
         boolean isLeftOverScrolled = position + 1 < selectedPosition;
-//        log("selectingProgress[" + selectingProgress + "]position[" + position + "]selectedPosition[" + selectedPosition
-//                + "]selectingPosition[" + selectingPosition
-//                + "]isSlideToRightSide[" + isSlideToRightSide + "]");
         if (isLeftOverScrolled || isRightOverScrolled) {
             selectedPosition = position;
         }
@@ -308,7 +346,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
     /**
      * 获得相应位置圆心x坐标
      *
-     * @param position
+     * @param position 位置
      * @return
      */
     private int getCenterOfCircleX(int position) {
