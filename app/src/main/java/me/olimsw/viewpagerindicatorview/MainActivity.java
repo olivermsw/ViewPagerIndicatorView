@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         List<View> pageList = new ArrayList<>();
         pageList.add(createPageView(Color.RED));
         pageList.add(createPageView(Color.BLUE));
-        pageList.add(createPageView(Color.YELLOW));
+        pageList.add(createPageView(Color.GRAY));
         pageList.add(createPageView(Color.GREEN));
         return pageList;
     }

@@ -16,6 +16,7 @@ import android.view.View;
  */
 
 public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChangeListener {
+    private  int defaultWidth ;
     private int radius = 20;
     private int padding = 30;
     private int count;
@@ -71,6 +72,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
         selectedPaint.setStyle(Paint.Style.FILL);
         selectedPaint.setStrokeWidth(0);
         animationType = AnimationType.SLIDE;
+        defaultWidth = dp2px(2);
     }
 
     @Override
@@ -269,7 +271,40 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
      * @param canvas 画布{@link Canvas}
      */
     private void onDrawCompressSlideView(Canvas canvas) {
-
+        int y = getHeight() / 2;
+        unselectedPaint.setStyle(Paint.Style.STROKE);
+        unselectedPaint.setStrokeWidth(defaultWidth);
+        log("selectingPosition  " + selectingPosition + "            selectedPosition  " + selectedPosition + "");
+        for (int i = 0; i < count; i++) {
+            if (i != selectingPosition && i != selectedPosition) {
+                int x = getCenterOfCircleX(i);
+                canvas.drawCircle(x, y, radius - defaultWidth / 2, unselectedPaint);
+            }
+        }
+        float offsetWidth;
+        if (isSlideToRightSide) {
+            offsetWidth = selectingProgress;
+        } else {
+            offsetWidth = 1 - selectingProgress;
+        }
+        if (selectedPosition == selectingPosition) {
+            unselectedPaint.setStyle(Paint.Style.FILL);
+            canvas.drawCircle(getCenterOfCircleX(selectedPosition), y, radius, unselectedPaint);
+        } else {
+            unselectedPaint.setStyle(Paint.Style.STROKE);
+            float selectedOffsetWidth = radius * (1 - offsetWidth);
+            if (defaultWidth >= selectedOffsetWidth) {
+                selectedOffsetWidth = defaultWidth;
+            }
+            unselectedPaint.setStrokeWidth(selectedOffsetWidth);
+            canvas.drawCircle(getCenterOfCircleX(selectedPosition), y, radius - selectedOffsetWidth / 2, unselectedPaint);
+            float selectingOffsetWidth = radius * offsetWidth;
+            if (defaultWidth >= selectingOffsetWidth) {
+                selectingOffsetWidth = defaultWidth;
+            }
+            unselectedPaint.setStrokeWidth(selectingOffsetWidth);
+            canvas.drawCircle(getCenterOfCircleX(selectingPosition), y, radius - selectingOffsetWidth / 2, unselectedPaint);
+        }
     }
 
     /**
@@ -371,6 +406,14 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
      */
     public void setAnimationType(AnimationType animationType) {
         this.animationType = animationType;
+        switch (animationType) {
+            case COMPRESSSLIDE:
+                unselectedPaint.setStyle(Paint.Style.STROKE);
+                break;
+            default:
+                unselectedPaint.setStyle(Paint.Style.FILL);
+                break;
+        }
     }
 
     @Override
@@ -404,6 +447,17 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
     public void setUnselectedColor(int unselectedColor) {
         this.unselectedColor = unselectedColor;
         this.unselectedPaint.setColor(unselectedColor);
+    }
+
+    /**
+     * dp转px
+     *
+     * @param dpValue dp值
+     * @return px值
+     */
+    public int dp2px(float dpValue) {
+        final float scale = this.getContext().getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 
     private void log(String log) {
