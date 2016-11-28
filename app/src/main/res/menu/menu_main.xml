@@ -34,7 +34,7 @@
                     app:showAsAction="ifRoom"></item>
                 <item
                     android:id="@+id/action_7"
-                    android:title=""
+                    android:title="ZOOM"
                     app:showAsAction="ifRoom"></item>
                 <item
                     android:id="@+id/action_8"

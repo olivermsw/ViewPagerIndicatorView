@@ -24,6 +24,7 @@ import static me.olimsw.viewpagerindicatorviewlibrary.AnimationType.RECTSLIDE;
 import static me.olimsw.viewpagerindicatorviewlibrary.AnimationType.SLIDE;
 import static me.olimsw.viewpagerindicatorviewlibrary.AnimationType.SMALLRECTSLIDE;
 import static me.olimsw.viewpagerindicatorviewlibrary.AnimationType.STANDARD;
+import static me.olimsw.viewpagerindicatorviewlibrary.AnimationType.ZOOM;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                         vpiv.setAnimationType(SMALLRECTSLIDE);
                         break;
                     case R.id.action_7:
+                        vpiv.setAnimationType(ZOOM);
+                        vpiv.setUnselectedColor(Color.WHITE);
                         break;
                     case R.id.action_8:
                         break;

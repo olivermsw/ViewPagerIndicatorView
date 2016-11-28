@@ -16,7 +16,7 @@ import android.view.View;
  */
 
 public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChangeListener {
-    private  int defaultWidth ;
+    private int defaultWidth;
     private int radius = 20;
     private int padding = 30;
     private int count;
@@ -139,9 +139,49 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
             case SMALLRECTSLIDE:
                 onDrawSmallRectSlideView(canvas);
                 break;
+            case ZOOM:
+                onDrawZoomView(canvas);
+                break;
             default:
                 onDrawStandardView(canvas);
                 break;
+        }
+    }
+
+    /**
+     * ZOOM模式动画绘制,缩放
+     *
+     * @param canvas 画布{@link Canvas}
+     */
+    private void onDrawZoomView(Canvas canvas) {
+        int y = getHeight() / 2;
+        int radius = this.radius * 2 / 3;
+        unselectedPaint.setAlpha(translucenceInt);
+        for (int i = 0; i < count; i++) {
+            if (i != selectingPosition && i != selectedPosition) {
+                int x = getCenterOfCircleX(i);
+                canvas.drawCircle(x, y, radius, unselectedPaint);
+            }
+        }
+        int alphaInt;
+        float offsetWidth;
+        if (isSlideToRightSide) {
+            offsetWidth = selectingProgress;
+            alphaInt = (int) ((255 - translucenceInt) * offsetWidth);
+        } else {
+            offsetWidth = 1 - selectingProgress;
+            alphaInt = (int) ((255 - translucenceInt) * offsetWidth);
+        }
+        if (selectedPosition == selectingPosition) {
+            unselectedPaint.setAlpha(255);
+            canvas.drawCircle(getCenterOfCircleX(selectedPosition), y, this.radius, unselectedPaint);
+        } else {
+            float selectedRadius = radius + (this.radius - radius) * (1 - offsetWidth);
+            unselectedPaint.setAlpha(255 - alphaInt);
+            canvas.drawCircle(getCenterOfCircleX(selectedPosition), y, selectedRadius, unselectedPaint);
+            float selectingRadius = radius + (this.radius - radius) * offsetWidth;
+            unselectedPaint.setAlpha(translucenceInt + alphaInt);
+            canvas.drawCircle(getCenterOfCircleX(selectingPosition), y, selectingRadius, unselectedPaint);
         }
     }
 
@@ -274,7 +314,6 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
         int y = getHeight() / 2;
         unselectedPaint.setStyle(Paint.Style.STROKE);
         unselectedPaint.setStrokeWidth(defaultWidth);
-        log("selectingPosition  " + selectingPosition + "            selectedPosition  " + selectedPosition + "");
         for (int i = 0; i < count; i++) {
             if (i != selectingPosition && i != selectedPosition) {
                 int x = getCenterOfCircleX(i);
@@ -414,6 +453,7 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
                 unselectedPaint.setStyle(Paint.Style.FILL);
                 break;
         }
+        invalidate();
     }
 
     @Override
