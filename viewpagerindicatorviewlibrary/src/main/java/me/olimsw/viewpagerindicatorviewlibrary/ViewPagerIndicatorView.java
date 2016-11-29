@@ -18,7 +18,7 @@ import android.view.View;
 
 public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChangeListener {
     private int defaultWidth;
-    private int radius = 20;
+    private int radius = 30;
     private int padding = 30;
     private int count;
     private int selectedPosition;
