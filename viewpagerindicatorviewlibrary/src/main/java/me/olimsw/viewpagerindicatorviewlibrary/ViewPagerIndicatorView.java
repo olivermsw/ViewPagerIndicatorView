@@ -2,10 +2,10 @@ package me.olimsw.viewpagerindicatorviewlibrary;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -18,8 +18,8 @@ import android.view.View;
 
 public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChangeListener {
     private int defaultWidth;
-    private int radius = 30;
-    private int padding = 30;
+    private int radius;
+    private int padding;
     private int count;
     private int selectedPosition;
     private int pageSelectedPosition;
@@ -64,6 +64,44 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
     private void init(AttributeSet attrs) {
         unselectedColor = Color.BLACK;
         selectedColor = Color.CYAN;
+
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ViewPageIndicatorView);
+        unselectedColor = typedArray.getColor(R.styleable.ViewPageIndicatorView_vpiv_unselectedColor,Color.parseColor("#77ffffff"));
+        selectedColor = typedArray.getColor(R.styleable.ViewPageIndicatorView_vpiv_selectedColor,Color.parseColor("#ffffff"));
+        radius = (int) typedArray.getDimension(R.styleable.ViewPageIndicatorView_vpiv_radius,dp2px(6));
+        padding = (int) typedArray.getDimension(R.styleable.ViewPageIndicatorView_vpiv_padding,dp2px(8));
+        int animationModeInt = typedArray.getInt(R.styleable.ViewPageIndicatorView_piv_animationMode,AnimationMode.STANDARD.ordinal());
+
+        switch (animationModeInt){
+            case 0:
+                animationMode = AnimationMode.STANDARD;
+                break;
+            case 1:
+                animationMode = AnimationMode.SLIDE;
+                break;
+            case 2:
+                animationMode = AnimationMode.COMPRESSSLIDE;
+                break;
+            case 3:
+                animationMode = AnimationMode.GRADIENTCOLOR;
+                break;
+            case 4:
+                animationMode = AnimationMode.RECTSLIDE;
+                break;
+            case 5:
+                animationMode = AnimationMode.SMALLRECTSLIDE;
+                break;
+            case 6:
+                animationMode = AnimationMode.ZOOM;
+                break;
+            case 7:
+                animationMode = AnimationMode.DRAG;
+                break;
+            default:
+                animationMode = AnimationMode.STANDARD;
+                break;
+        }
+        typedArray.recycle();
         unselectedPaint.setColor(unselectedColor);
         unselectedPaint.setAntiAlias(true);
         unselectedPaint.setStyle(Paint.Style.FILL);
@@ -159,21 +197,22 @@ public class ViewPagerIndicatorView extends View implements ViewPager.OnPageChan
      */
     private void onDrawDragView(Canvas canvas) {
 
-        int y = getHeight() / 2;
-        unselectedPaint.setAlpha(translucenceInt);
-        for (int i = 0; i < count; i++) {
-            int x = getCenterOfCircleX(i);
-            canvas.drawCircle(x, y, radius, unselectedPaint);
-        }
-        Path path = new Path();
-        path.moveTo(radius, 0);
-        path.cubicTo(radius, 0, 2 * radius + padding / 2, getHeight(), 3 * radius + padding, 0);
-        path.lineTo(3 * radius + padding, getHeight());
-        path.cubicTo(3 * radius + padding, getHeight(), 2 * radius + padding / 2, 0, radius, getHeight());
-        path.lineTo(radius, 0);
-//        unselectedPaint.setStyle(Paint.Style.STROKE);
-//        unselectedPaint.setStrokeWidth(3);
-        canvas.drawPath(path, unselectedPaint);
+//        int y = getHeight() / 2;
+//        unselectedPaint.setAlpha(translucenceInt);
+//        for (int i = 0; i < count; i++) {
+//            int x = getCenterOfCircleX(i);
+//            canvas.drawCircle(x, y, radius, unselectedPaint);
+//        }
+//        Path path = new Path();
+//        path.moveTo(radius, 0);
+//        path.cubicTo(radius, 0, 2 * radius + padding / 2, getHeight(), 3 * radius + padding, 0);
+//        path.lineTo(3 * radius + padding, getHeight());
+//        path.cubicTo(3 * radius + padding, getHeight(), 2 * radius + padding / 2, 0, radius, getHeight());
+//        path.lineTo(radius, 0);
+////        unselectedPaint.setStyle(Paint.Style.STROKE);
+////        unselectedPaint.setStrokeWidth(3);
+//        canvas.drawPath(path, unselectedPaint);
+        // TODO: 2016/11/30  
     }
 
     /**

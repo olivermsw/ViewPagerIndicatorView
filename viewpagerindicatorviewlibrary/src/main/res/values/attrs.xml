@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ViewPageIndicatorView">
+
+
+        <attr name="vpiv_radius" format="dimension" />
+        <attr name="vpiv_padding" format="dimension" />
+        <attr name="vpiv_unselectedColor" format="color" />
+        <attr name="vpiv_selectedColor" format="color" />
+        <attr name="piv_animationMode">
+            <enum name="standard" value="0" />
+            <enum name="slide" value="1" />
+            <enum name="compressslide" value="2" />
+            <enum name="granientcolor" value="3" />
+            <enum name="rectslide" value="4" />
+            <enum name="smallrextslide" value="5" />
+            <enum name="zoom" value="6" />
+            <enum name="drag" value="7" />
+        </attr>
+    </declare-styleable>
+</resources>
